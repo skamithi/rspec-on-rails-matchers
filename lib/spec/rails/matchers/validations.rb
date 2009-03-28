@@ -40,7 +40,12 @@ module Spec
 
       def validate_uniqueness_of(attribute)
         return simple_matcher("model to validate the uniqueness of #{attribute}") do |model|
-          model.class.stub!(:find).and_return(true)
+          if framework_type == 'rspec'
+            model.class.stub!(:find).and_return(true)
+          elsif framework_type == 'mocha'
+            model.class.expect(:find).returns(true)
+          end
+
           !model.valid? && model.errors.invalid?(attribute)
         end
       end
