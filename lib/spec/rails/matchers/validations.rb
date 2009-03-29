@@ -40,6 +40,8 @@ module Spec
 
       def validate_uniqueness_of(attribute)
         return simple_matcher("model to validate the uniqueness of #{attribute}") do |model|
+          framework_type = Spec::Runner.configuration.mock_framework.split('/').last
+
           if framework_type == 'rspec'
             model.class.stub!(:find).and_return(true)
           elsif framework_type == 'mocha'
